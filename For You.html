@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You Po 🌷</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  height:100vh;
+  background: radial-gradient(circle at top,#141e30,#020205 70%);
+  overflow:hidden;
+  font-family:'Segoe UI',sans-serif;
+}
+
+/* STARS */
+.star{
+  position:absolute;
+  background:#b457b9dc;
+  border-radius:50%;
+  opacity:.6;
+  animation:twinkle var(--twinkle-speed) ease-in-out infinite;
+  animation-delay:var(--twinkle-delay);
+}
+.star.pink{background:#f7b7e1;opacity:.4}
+@keyframes twinkle{
+  0%{opacity:.15;transform:scale(.85)}
+  50%{opacity:var(--twinkle-max);transform:scale(1)}
+  100%{opacity:.25;transform:scale(.9)}
+}
+
+/* MESSAGE */
+.message{
+  position:absolute;
+  top:8%;
+  width:100%;
+  text-align:center;
+  color:#fff;
+  z-index:10;
+  transition:opacity 2s ease;
+}
+.message{opacity:0;}
+.message.show{opacity:1;}
+
+.message.fade-out{opacity:0}
+.message h1{margin:0;font-size:3em}
+.message p{color:#ffb6c1}
+
+
+
+
+/* FIELD */
+.ground {
+  position: absolute;
+  bottom: -200px; 
+  width: 100%;
+  height: 160px;
+  background: linear-gradient(#025622, #011503); 
+  z-index: 2;
+  transition: bottom 2.8s ease;
+  .ground {
+  background: linear-gradient(#013314, #000900);
+}
+
+}
+
+
+.field{
+  position:absolute;
+  bottom:-60px; 
+  width:100%;
+  height:55vh;
+  pointer-events:none;
+  transition:bottom 2.8s ease;
+}
+
+
+/* FLOWER */
+.flower{
+  position:absolute;
+  bottom:0;
+  width:42px;
+  height:180px;
+  transform-origin:bottom center;
+  z-index:3;
+  transform:translateX(-50%);
+  animation:sway 6s ease-in-out infinite;
+}
+@keyframes sway{
+  0%{transform:translateX(-50%) rotate(-1.4deg)}
+  50%{transform:translateX(-50%) rotate(1.4deg)}
+  100%{transform:translateX(-50%) rotate(-1.4deg)}
+}
+.flower::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:50%;
+  width:20px;
+  height:6px;
+  background:rgba(0,0,0,.3);
+  filter:blur(4px);
+  transform:translateX(-50%);
+}
+
+/* STEM + GROW */
+.stem{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  width:4px;
+  height:0;
+  background:linear-gradient(#1f9251,#0f3f28);
+  transform:translateX(-50%);
+  animation:growStem 3.5s forwards;
+  animation-play-state:paused;
+}
+@keyframes growStem{to{height:130px}}
+
+.leaf{
+  position:absolute;
+  width:18px;
+  height:50px;
+  background:linear-gradient(#12b35a83,#10613ad2);
+  border-radius:0 100% 0 100%;
+  opacity:0;
+  animation:leafIn 1.9s forwards;
+  animation-delay:1.5s;
+  animation-play-state:paused;
+}
+@keyframes leafIn{to{opacity:1}}
+.leaf.left{left:-8px;bottom:65px;transform:rotate(-25deg)}
+.leaf.right{right:1px;bottom:70px;transform:rotate(38deg)}
+
+.head{
+  position:absolute;
+  bottom:125px;
+  left:50%;
+  transform:translateX(-50%) scale(0);
+  animation:bloom 2s forwards;
+  animation-delay:2.1s;
+  animation-play-state:paused;
+}
+@keyframes bloom{to{transform:translateX(-50%) scale(1)}}
+
+/* PETALS */
+.petal{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  width:18px;
+  height:58px;
+  background:linear-gradient(to top,#ff2f6d,#ff9bb7e5);
+  border-radius:70% 70% 20% 20%;
+  transform-origin:bottom center;
+}
+.petal.inner{width:21px;height:43px;background:linear-gradient(to top,#ff1f5c,#ff6f91);transform:translateX(-50%)}
+.petal.ol{transform:translateX(-50%) rotate(-16deg)}
+.petal.ol{width: 23px;}
+.petal.or{transform:translateX(-50%) rotate(16deg)}
+.petal.or{width: 23px;}
+.petal.fl{transform:translateX(-50%) rotate(-3deg)}
+.petal.fr{transform:translateX(-50%) rotate(3deg)}
+
+/* GLOW */
+.glow{
+  position:absolute;
+  width:3px;
+  height:3px;
+  background:#fa7b8e;
+  border-radius:50%;
+  filter:blur(1px);
+  opacity:0;
+  animation:floatDrift 4.5s ease-out forwards;
+}
+@keyframes floatDrift{
+  0%{transform:translate(-50%,0);opacity:0}
+  20%{opacity:.8}
+  100%{
+    transform:translate(-50%,-120px) translateX(var(--drift));
+    opacity:0;
+  }
+}
+
+.ground{ bottom:-200px; transition:bottom 2.5s ease; }
+.field{ bottom:-60px; transition:bottom 2.5s ease; }
+
+
+.field.show,
+.ground.show {
+  opacity: 1;
+}
+
+
+#yesBtn{
+  margin-top:10px;
+  padding:8px 18px;
+  font-size:1rem;
+  border:none;
+  border-radius:8px;
+  background:#ff9bb7;
+  color:#fff;
+  cursor:pointer;
+  transition:.8s;
+  opacity:0;
+}
+#yesBtn:hover{transform:scale(1.05);background:#ff7aa2}
+
+#response {
+  display: block;        
+  margin-top: 15px;       
+  color: #ffb6c1;
+  font-size: 1.4em;
+  opacity: 0;
+  transition: opacity 4s ease, transform 4s ease;
+}
+
+
+#moon {
+  position: absolute;
+  left: 50%;
+  bottom: 60%;
+  width: 140px; 
+  height: 140px; 
+  border-radius: 50%;
+
+
+  background: 
+    radial-gradient(circle at 30% 30%, #fff9e6, #f5e0b3 70%), 
+    radial-gradient(circle at 60% 25%, #d1b37f 0%, #f5e0b3 50%, transparent 70%),
+    radial-gradient(circle at 40% 50%, #cda76f 0%, #f5e0b3 50%, transparent 70%), 
+    radial-gradient(circle at 70% 60%, #cda76f 0%, #f5e0b3 40%, transparent 70%), 
+    radial-gradient(circle at 50% 80%, #d1b37f 0%, #f5e0b3 45%, transparent 70%),
+    radial-gradient(circle at 20% 60%, #cda76f 0%, #f5e0b3 40%, transparent 60%),
+    radial-gradient(circle at 50% 50%, #fffde6 0%, transparent 90%);
+
+  background-blend-mode: lighten;
+
+
+  box-shadow: 
+    0 0 50px rgba(255, 245, 180, 0.5),     
+    inset -8px -8px 20px rgba(0,0,0,0.3),    
+    inset 5px 5px 10px rgba(255,255,255,0.25); 
+
+  transform: translateX(-50%);
+  z-index: 2;
+
+  /* Breathing glow */
+  animation: moonBreath 8s ease-in-out infinite;
+
+  transition: all 3s ease-in-out;
+}
+
+@keyframes moonBreath {
+  0%, 100% { 
+    box-shadow: 0 0 40px rgba(255, 245, 180, 0.4), inset -8px -8px 20px rgba(0,0,0,0.3), inset 5px 5px 10px rgba(255,255,255,0.25); 
+  }
+  50% { 
+    box-shadow: 0 0 70px rgba(255, 245, 180, 0.6), inset -8px -8px 20px rgba(0,0,0,0.3), inset 5px 5px 10px rgba(255,255,255,0.25); 
+  }
+}
+
+
+#moon.breath {
+  animation: moonGlow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes moonGlow {
+   0%, 100% { 
+    box-shadow: 0 0 40px rgba(255, 245, 180, 0.4), inset -8px -8px 20px rgba(0,0,0,0.3), inset 5px 5px 10px rgba(255,255,255,0.25); 
+  }
+  50% { 
+    box-shadow: 0 0 70px rgba(255, 245, 180, 0.6), inset -8px -8px 20px rgba(0,0,0,0.3), inset 5px 5px 10px rgba(255,255,255,0.25); 
+  }
+}
+
+
+
+#moon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15), transparent 70%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+
+
+#moon.exit{
+  animation:moonExit 3s ease-in forwards;
+}
+
+@keyframes moonExit{
+  from{bottom:60%; opacity:1}
+  to{bottom:120%; opacity:0}
+}
+
+#moon.appear{
+  animation:moonAppear 4s ease-in forwards;
+  z-index: 1;
+}
+
+@keyframes moonAppear{
+  from{bottom:120%; opacity:0}
+  to{bottom:76%; opacity:1}
+}
+
+
+/* FIREWORK PARTICLES */
+.firework{
+  position:absolute;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  animation:explode 3s ease-out forwards;
+  z-index:1;
+}
+@keyframes explode{
+  to{transform:translate(var(--x),var(--y));opacity:0}
+}
+</style>
+</head>
+<body> 
+
+<div id="moon"></div>
+
+<div id="openScreen" style="
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:20;
+">
+  <button id="openBtn" style="
+    padding:14px 28px;
+    font-size:1.2rem;
+    border:none;
+    border-radius:12px;
+    background:#ff9bb7;
+    color:#fff;
+    cursor:pointer;
+    transition:.4s;
+  ">
+    Open 💌
+  </button>
+</div>
+
+
+<div class="message" id="message">
+  <h1 id="t1"></h1>
+  <p id="t2"></p>
+  <p id="t3"></p>
+  <button id="yesBtn">Yes 💖</button>
+  <p id="response"></p>
+  <p id="response" style="margin-top:10px;color:#ffb6c1"></p>
+</div>
+
+<div class="field" id="field"></div>
+<div class="ground"></div>
+
+<script>
+/* TYPEWRITER */
+function typeText(el,text,delay=40,cb){
+  let i=0;
+  const int=setInterval(()=>{
+    el.textContent+=text[i++];
+    if(i===text.length){clearInterval(int);cb&&cb();}
+  },delay);
+}
+
+const t1=document.getElementById('t1');
+const t2=document.getElementById('t2');
+const t3=document.getElementById('t3');
+const yesBtn=document.getElementById('yesBtn');
+const response=document.getElementById('response');
+const message=document.getElementById('message');
+
+/* STARS */
+function createStars(c,p=false){
+  for(let i=0;i<c;i++){
+    const s=document.createElement('div');
+    s.className='star'+(p?' pink':'');
+    const size=Math.random()*1.8+.8;
+    s.style.width=s.style.height=size+'px';
+    s.style.left=Math.random()*innerWidth+'px';
+    s.style.top=Math.random()*innerHeight +'px';
+    s.style.setProperty('--twinkle-speed',(Math.random()*4+2)+'s');
+    s.style.setProperty('--twinkle-delay',(-Math.random()*6)+'s');
+    s.style.setProperty('--twinkle-max',(Math.random()*.7+.3));
+    document.body.appendChild(s);
+  }
+}
+createStars(140);createStars(200,true);
+
+/* FLOWERS */
+const field=document.getElementById('field');
+const rows=[
+  {count:6, scale:1, y:-20},
+  {count:5, scale:.85, y:-70},
+  {count:4, scale:.7, y:-110},
+  {count:3, scale:.4, y:-150},
+  {count:4, scale:.2, y:-190}
+];
+rows.forEach(r=>{
+  const m=6, sp=(100-m*2)/r.count;
+  for(let i=0;i<r.count;i++){
+    const f=document.createElement('div');
+    f.className='flower';
+    f.style.left=(m+sp*i+sp/2+(Math.random()*sp*.3-sp*.15))+'%';
+    f.style.bottom=r.y+'px';
+    f.style.transform+=` scale(${r.scale})`;
+    f.innerHTML=`
+      <div class="stem"></div>
+      <div class="leaf left"></div>
+      <div class="leaf right"></div>
+      <div class="head">
+        <div class="petal ol"></div>
+        <div class="petal or"></div>
+        <div class="petal fl"></div>
+        <div class="petal fr"></div>
+        <div class="petal inner"></div>
+      </div>`;
+    field.appendChild(f);
+  }
+});
+
+/* GLOW */
+setInterval(()=>{
+  document.querySelectorAll('.head').forEach(h=>{
+    if(Math.random()<.35){
+      const g=document.createElement('div');
+      g.className='glow';
+      g.style.left='50%';
+      g.style.bottom='35px';
+      g.style.setProperty('--drift',(Math.random()*40-20)+'px');
+      h.appendChild(g);
+      setTimeout(()=>g.remove(),4500);
+    }
+  });
+},600);
+
+/* TEXT SEQUENCE */
+function startSequence(){
+  message.classList.add('show');
+
+  typeText(t1,"For You Po🌷",100,()=>{
+    setTimeout(()=>{
+      typeText(
+        t2,
+        "I made this little field of tulips and stars just for you… it reminds me of the calm, happy moments we share, that I treasure so much..",
+        25,
+        ()=>{
+          typeText(
+            t3,
+            "So… would you like to be my Valentine? 💌",
+            30,
+            ()=>{ yesBtn.style.opacity=1; }
+          );
+        }
+      );
+    },3000);
+  });
+}
+
+
+/* FIREWORKS */
+function launchFirework(){
+  let x=Math.random()*innerWidth;
+  let y=innerHeight;
+  const peak=Math.random()*innerHeight*.35+100;
+  let t=0;
+  const curve=Math.random()*2-1;
+
+  const rocket=document.createElement('div');
+  rocket.style.position='absolute';
+  rocket.style.width='2px';
+  rocket.style.height='2px';
+  rocket.style.background='#ffd6e6';
+  rocket.style.borderRadius='50%';
+  rocket.style.boxShadow='0 0 12px #ffd6e6';
+  document.body.appendChild(rocket);
+
+ const rise = setInterval(() => {
+    t += 0.3;
+    y -= 10;
+    x += Math.sin(t) * curve * 4;
+    rocket.style.left = x + 'px';
+    rocket.style.top = y + 'px';
+
+    // create multiple small trail particles
+    for (let i = 0; i < 3; i++) {
+        const trailParticle = document.createElement('div');
+        const colors = ['#ff9bb7','#b457b9','#ffffff'];
+        trailParticle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        trailParticle.className = 'firework';
+        trailParticle.style.width = '2px';
+        trailParticle.style.height = '2px';
+        trailParticle.style.background = '#ffd6e6';
+        trailParticle.style.borderRadius = '50%';
+        trailParticle.style.position = 'absolute';
+        trailParticle.style.left = x + (Math.random() * 6 - 3) + 'px';
+        trailParticle.style.top = y + (Math.random() * 6 - 3) + 'px';
+        trailParticle.style.opacity = 0.6 + Math.random() * 0.4;
+        document.body.appendChild(trailParticle);
+
+        // make them fade out and disappear
+        setTimeout(() => trailParticle.remove(), 400 + Math.random() * 200);
+    }
+
+    if (y <= peak) {
+        clearInterval(rise);
+        rocket.remove();
+        explodeHeart(x, y);
+    }
+}, 30);
+
+
+  // extra trail sparks
+  for(let i=0;i<3;i++){
+    const s=document.createElement('div');
+    s.style.position='absolute';
+    s.style.left = (x + Math.random()*6 - 3) + 'px';
+    s.style.top  = (y + Math.random()*6 - 3) + 'px';
+    s.style.width='2px';
+    s.style.height='2px';
+    s.style.background='#ffd6e6';
+    s.style.borderRadius='50%';
+    s.style.opacity='0.6';
+    s.style.boxShadow='0 0 6px #ffd6e6';
+    document.body.appendChild(s);
+
+    setTimeout(()=>s.remove(),300);
+  }
+
+}
+
+/* HEART EXPLOSION */
+function explodeHeart(x,y){
+  const colors = ['#ff9bb7', '#b457b9', '#ffffff']; 
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  for(let i=0;i<300;i++){
+    const t=Math.PI*2*i/140;
+    const hx=16*Math.pow(Math.sin(t),3);
+    const hy=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));
+
+    const p=document.createElement('div');
+    p.className='firework';
+    p.style.left=x+'px';
+    p.style.top=y+'px';
+    p.style.background=color;
+    p.style.setProperty('--x',(hx*12)+'px');
+    p.style.setProperty('--y',(hy*12)+'px');
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),2000);
+  }
+
+  // extra sparkle particles
+  for(let i=0;i<80;i++){
+    const p=document.createElement('div');
+    p.className='firework';
+    p.style.left=x+'px';
+    p.style.top=y+'px';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.width='2px';
+    p.style.height='2px';
+
+    p.style.setProperty('--x',(Math.random()*400-200)+'px');
+    p.style.setProperty('--y',(Math.random()*300-150)+'px');
+
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),1800);
+  }
+
+}
+
+const openBtn = document.getElementById('openBtn');
+const openScreen = document.getElementById('openScreen');
+
+openBtn.onclick = () => {
+  openScreen.style.opacity = 0;
+
+  setTimeout(()=>{
+    openScreen.remove();
+
+    const moon = document.getElementById('moon');
+    moon.classList.add('rise');
+
+    document.getElementById('moon').classList.add('exit');
+    document.querySelector('.ground').style.bottom = '0px';
+    document.querySelector('.field').style.bottom = '140px';
+    
+
+    setTimeout(()=>{
+      document.querySelector('.field').classList.add('show');
+      document.querySelector('.ground').classList.add('show');
+
+      startSequence();
+    }, 3000);
+
+    setTimeout(()=>{
+    document.querySelectorAll('.stem,.leaf,.head').forEach(el=>{
+      el.style.animationPlayState = 'running';
+    });
+  }, 2600);
+
+
+  setTimeout(()=>{
+    startTypewriterText();
+  }, 4200);
+
+  },600);
+};
+
+
+
+let fireLoop=null;
+yesBtn.onclick = () => {
+  t1.style.transition = "opacity 1.5s ease";
+  t2.style.transition = "opacity 1.5s ease";
+  t3.style.transition = "opacity 1.5s ease";
+
+  t1.style.opacity = 0;
+  t2.style.opacity = 0;
+  t3.style.opacity = 0;
+
+  response.textContent = "Yay! I'm really glad 🌷💌";
+  response.style.opacity = 1;
+  response.style.transform = "scale(1)";
+  
+  response.style.fontSize = "1.6em";
+
+  setTimeout(() => {
+    response.style.opacity = 0;
+    response.style.transform = "scale(1.2)";
+  }, 2000);  
+
+  yesBtn.disabled = true;
+  yesBtn.style.background = "#ccc";
+  yesBtn.style.opacity = 0;
+
+  const moon = document.getElementById("moon");
+  moon.classList.add('appear');
+  moon.classList.add("breath");
+  moon.style.transition = "all 3s ease-in-out";
+  moon.style.left = "15%";
+  moon.style.transform = "translateX(0)";
+
+  fireLoop = setInterval(() => {
+    launchFirework();
+  }, 1300);
+};
+
+
+</script>
+
+</body>
+</html>
