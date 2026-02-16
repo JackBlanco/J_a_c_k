@@ -1,0 +1,53 @@
+// Wait until the page loads
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector("form");
+
+    form.addEventListener("submit", function (event) {
+
+        const name = document.querySelector('input[type="text"]').value;
+        const date = document.querySelector('input[type="date"]').value;
+        const radios = document.querySelectorAll('input[type="radio"]');
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const entry = document.querySelector("textarea").value;
+
+        let radioSelected = false;
+        let moodSelected = false;
+
+        // Check radio buttons
+        radios.forEach(function (radio) {
+            if (radio.checked) {
+                radioSelected = true;
+            }
+        });
+
+        // Check checkboxes
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                moodSelected = true;
+            }
+        });
+
+        // Validation
+        if (name === "" || date === "" || entry === "") {
+            alert("Please fill out all required fields.");
+            event.preventDefault();
+            return;
+        }
+
+        if (!radioSelected) {
+            alert("Please select AM or PM.");
+            event.preventDefault();
+            return;
+        }
+
+        if (!moodSelected) {
+            alert("Please select at least one mood.");
+            event.preventDefault();
+            return;
+        }
+
+        alert("Form submitted successfully!");
+    });
+
+});
