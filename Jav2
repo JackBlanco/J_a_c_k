@@ -1,0 +1,82 @@
+var display = document.getElementById("display");
+var buttons = document.getElementsByTagName("button");
+
+var firstNumber = "";
+var secondNumber = "";
+var operator = "";
+var result = "";
+
+// loop through buttons
+for (var i = 0; i < buttons.length; i++) {
+
+    buttons[i].addEventListener("click", function() {
+
+        var value = this.innerHTML;
+
+        // if number or decimal
+        if (!isNaN(value) || value == ".") {
+
+            if (operator == "") {
+                firstNumber = firstNumber + value;
+                display.innerHTML = firstNumber;
+            } else {
+                secondNumber = secondNumber + value;
+                display.innerHTML = secondNumber;
+            }
+        }
+
+        // if operator
+        else if (value == "+" || value == "-" || value == "*" || value == "/") {
+            operator = value;
+        }
+
+        // if equals
+        else if (value == "=") {
+
+            var num1 = parseFloat(firstNumber);
+            var num2 = parseFloat(secondNumber);
+
+            if (operator == "+") {
+                result = num1 + num2;
+            }
+            else if (operator == "-") {
+                result = num1 - num2;
+            }
+            else if (operator == "*") {
+                result = num1 * num2;
+            }
+            else if (operator == "/") {
+                result = num1 / num2;
+            }
+
+            display.innerHTML = result;
+
+            // reset for next calculation
+            firstNumber = result;
+            secondNumber = "";
+            operator = "";
+        }
+
+        // if C (clear all)
+        else if (value == "C") {
+            firstNumber = "";
+            secondNumber = "";
+            operator = "";
+            display.innerHTML = "0";
+        }
+
+        // if CE (remove one)
+        else if (value == "CE") {
+
+            if (operator == "") {
+                firstNumber = firstNumber.slice(0, -1);
+                display.innerHTML = firstNumber || "0";
+            } else {
+                secondNumber = secondNumber.slice(0, -1);
+                display.innerHTML = secondNumber || "0";
+            }
+        }
+
+    });
+
+}
