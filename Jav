@@ -1,0 +1,44 @@
+var display = document.getElementById("display");
+var buttons = document.getElementsByTagName("button");
+
+var current = "";
+
+// loop through buttons (simple for loop)
+for (var i = 0; i < buttons.length; i++) {
+
+    buttons[i].addEventListener("click", function() {
+
+        var value = this.innerHTML;
+
+        // if equals
+        if (value == "=") {
+            current = eval(current);
+            display.innerHTML = current;
+        }
+
+        // if C (clear all)
+        else if (value == "C") {
+            current = "";
+            display.innerHTML = "0";
+        }
+
+        // if CE (remove one)
+        else if (value == "CE") {
+            current = current.slice(0, current.length - 1);
+
+            if (current == "") {
+                display.innerHTML = "0";
+            } else {
+                display.innerHTML = current;
+            }
+        }
+
+        // normal numbers and operators
+        else {
+            current = current + value;
+            display.innerHTML = current;
+        }
+
+    });
+
+}
