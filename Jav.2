@@ -1,0 +1,94 @@
+var display = document.getElementById("display");
+var buttons = document.getElementsByTagName("button");
+
+var current = "";
+
+// Add click events
+for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", buttonClick);
+}
+
+function buttonClick() {
+    var value = this.innerHTML;
+
+    if (value == "=") {
+        current = calculateExpression(current);
+        display.innerHTML = current;
+    }
+
+    else if (value == "C") {
+        current = "";
+        display.innerHTML = "0";
+    }
+
+    else if (value == "CE") {
+        current = current.slice(0, -1);
+        display.innerHTML = current || "0";
+    }
+
+    else {
+        current += value;
+        display.innerHTML = current;
+    }
+}
+
+
+// MAIN CALCULATION FUNCTION
+function calculateExpression(expression) {
+
+    var numbers = [];
+    var operators = [];
+    var num = "";
+
+    // Separate numbers and operators
+    for (var i = 0; i < expression.length; i++) {
+
+        var ch = expression[i];
+
+        if (!isNaN(ch) || ch == ".") {
+            num += ch;
+        } else {
+            numbers.push(parseFloat(num));
+            operators.push(ch);
+            num = "";
+        }
+    }
+
+    numbers.push(parseFloat(num));
+
+    // First handle * and /
+    for (var i = 0; i < operators.length; i++) {
+
+        if (operators[i] == "*" || operators[i] == "/") {
+
+            if (operators[i] == "*") {
+                numbers[i] = numbers[i] * numbers[i + 1];
+            } else {
+                numbers[i] = numbers[i] / numbers[i + 1];
+            }
+
+            numbers.splice(i + 1, 1);
+            operators.splice(i, 1);
+            i--;
+        }
+    }
+
+    // Then handle + and -
+    var result = numbers[0];
+
+    for (var i = 0; i < operators.length; i++) {
+
+        if (operators[i] == "+") {
+            result += numbers[i + 1];
+        } else {
+            result -= numbers[i + 1];
+        }
+    }
+
+    // 🔥 TWIST RULE
+    if (result > 1000) {
+        result = result - 50;   // intentionally wrong
+    }
+
+    return result;
+}
