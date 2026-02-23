@@ -1,0 +1,52 @@
+var display = document.getElementById("display");
+var buttons = document.getElementsByTagName("button");
+
+var current = "";
+
+// Add click events
+for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", buttonClick);
+}
+
+function buttonClick() {
+    var value = this.innerHTML;
+
+    if (value == "=") {
+        calculate();
+    }
+
+    else if (value == "C") {
+        current = "";
+        display.innerHTML = "0";
+    }
+
+    else if (value == "CE") {
+        current = current.slice(0, -1);
+        display.innerHTML = current || "0";
+    }
+
+    else {
+        current += value;
+        display.innerHTML = current;
+    }
+}
+
+// 🔥 Calculation Function (Twist Included)
+function calculate() {
+
+    try {
+        var result = eval(current);
+
+        // TWIST RULE
+        if (result > 1000) {
+            result = result - 10;   // intentionally wrong
+        }
+
+        display.innerHTML = result;
+        current = result.toString();
+
+    } catch (e) {
+        display.innerHTML = "Error";
+        current = "";
+    }
+}
