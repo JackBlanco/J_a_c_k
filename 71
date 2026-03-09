@@ -1,0 +1,154 @@
+<html>
+<head>
+<title>Lab 6 Blanco</title>
+
+<style>
+
+h1{
+display:flex;
+justify-content:center;
+}
+
+body{
+text-align:center;
+}
+
+table{
+margin-left:17%;
+width:66%;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Inventory System</h1>
+
+<input type="text" id="itemname" placeholder="Item Name">
+<input type="text" id="price" placeholder="Price">
+<input type="text" id="stock" placeholder="Stock">
+
+<button onclick="inv.additem()">Add Item</button>
+
+<br><br>
+
+<input type="text" id="buyname" placeholder="Item Name">
+<input type="text" id="buyqty" placeholder="Quantity">
+
+<button onclick="inv.buyitem()">Buy Item</button>
+
+<br><br>
+
+<table border="1" id="table">
+
+<tr>
+<th>Item</th>
+<th>Price</th>
+<th>Stock</th>
+</tr>
+
+<tr>
+<td>Apple</td>
+<td>10.00</td>
+<td>5</td>
+</tr>
+
+<tr>
+<td>Banana</td>
+<td>5.00</td>
+<td><font color="red">Out Of Stock</font></td>
+</tr>
+
+<tr>
+<td>Orange</td>
+<td>8.50</td>
+<td>3</td>
+</tr>
+
+</table>
+
+<script>
+
+class Inventory{
+
+constructor(){
+this.table = document.getElementById("table");
+}
+
+additem(){
+
+let name = document.getElementById("itemname").value;
+let price = document.getElementById("price").value;
+let stock = document.getElementById("stock").value;
+
+let row = document.createElement("tr");
+
+let cell1 = document.createElement("td");
+let cell2 = document.createElement("td");
+let cell3 = document.createElement("td");
+
+cell1.innerHTML = name;
+cell2.innerHTML = price;
+
+if(stock == 0){
+cell3.innerHTML = "Out Of Stock";
+cell3.style.color = "red";
+}
+else{
+cell3.innerHTML = stock;
+}
+
+row.appendChild(cell1);
+row.appendChild(cell2);
+row.appendChild(cell3);
+
+this.table.appendChild(row);
+
+}
+
+buyitem(){
+
+let name = document.getElementById("buyname").value;
+let qty = parseInt(document.getElementById("buyqty").value);
+
+let rows = this.table.getElementsByTagName("tr");
+
+for(let i=1;i<rows.length;i++){
+
+let item = rows[i].cells[0].innerHTML;
+let stock = rows[i].cells[2].innerHTML;
+
+if(item == name){
+
+if(stock == "Out Of Stock"){
+alert("Item is Out Of Stock");
+return;
+}
+
+let newstock = parseInt(stock) - qty;
+
+if(newstock <= 0){
+rows[i].cells[2].innerHTML = "Out Of Stock";
+rows[i].cells[2].style.color = "red";
+}
+else{
+rows[i].cells[2].innerHTML = newstock;
+}
+
+}
+
+}
+
+}
+
+}
+
+let inv = new Inventory();
+
+</script>
+
+</body>
+</html>
