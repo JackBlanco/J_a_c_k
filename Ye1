@@ -1,0 +1,143 @@
+<html>
+<head>
+    <title>Lab 6 Blanco</title>
+
+    <style>
+        h1{
+            display:flex;
+            justify-content:center;
+        }
+
+        body{
+            text-align:center;
+        }
+
+        table{
+            margin-left:17%;
+            width:66%;
+            text-align:center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Inventory System</h1>
+
+    <input type="text" id="itemname" placeholder="Item Name">
+    <input type="text" id="price" placeholder="Price">
+    <input type="text" id="stock" placeholder="Stock">
+
+    <button onclick="inv.additem()">Add Item</button>
+
+    <br><br>
+
+    <input type="text" id="buyname" placeholder="Item Name">
+    <input type="text" id="buyqty" placeholder="Quantity">
+
+    <button onclick="inv.buyitem()">Buy Item</button>
+
+    <br><br>
+
+    <table border="1" id="table">
+
+        <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Stock</th>
+        </tr>
+
+        <tr>
+            <td>Apple</td>
+            <td>10.00</td>
+            <td>5</td>
+        </tr>
+
+        <tr>
+            <td>Banana</td>
+            <td>5.00</td>
+            <td><font color="red">Out Of Stock</font></td>
+        </tr>
+
+        <tr>
+            <td>Orange</td>
+            <td>8.50</td>
+            <td>3</td>
+        </tr>
+
+    </table>
+
+<script>
+
+class Inventory{
+
+    constructor(){
+        this.table = document.getElementById("table");
+    }
+
+    additem(){
+
+        let name = document.getElementById("itemname").value;
+        let price = document.getElementById("price").value;
+        let stock = document.getElementById("stock").value;
+
+        let row = this.table.insertRow();
+
+        let cell1 = row.insertCell(0);
+        let cell2 = row.insertCell(1);
+        let cell3 = row.insertCell(2);
+
+        cell1.innerHTML = name;
+        cell2.innerHTML = price;
+
+        if(stock == 0){
+            cell3.innerHTML = "Out Of Stock";
+            cell3.style.color = "red";
+        }
+        else{
+            cell3.innerHTML = stock;
+        }
+
+    }
+
+    buyitem(){
+
+        let name = document.getElementById("buyname").value;
+        let qty = parseInt(document.getElementById("buyqty").value);
+
+        for(let i = 1; i < this.table.rows.length; i++){
+
+            let item = this.table.rows[i].cells[0].innerHTML;
+            let stock = this.table.rows[i].cells[2].innerHTML;
+
+            if(item == name){
+
+                if(stock == "Out Of Stock"){
+                    alert("Item is Out Of Stock");
+                    return;
+                }
+
+                let newstock = parseInt(stock) - qty;
+
+                if(newstock <= 0){
+                    this.table.rows[i].cells[2].innerHTML = "Out Of Stock";
+                    this.table.rows[i].cells[2].style.color = "red";
+                }
+                else{
+                    this.table.rows[i].cells[2].innerHTML = newstock;
+                }
+
+            }
+
+        }
+
+    }
+
+}
+
+let inv = new Inventory();
+
+</script>
+
+</body>
+</html>
